@@ -23,7 +23,7 @@
   <depends>com.intellij.modules.lang</depends>
 
   <extensions defaultExtensionNs="com.intellij">
-    <toolWindow id="Continuous Integration" anchor="right" factoryClass="ciToolWindow.CiToolWindowFactory" />
+    <toolWindow id="Continuous Integration" anchor="right" factoryClass="ui.ciToolWindow.CiToolWindowFactory" />
     <!-- Add your extensions here -->
   </extensions>
 
