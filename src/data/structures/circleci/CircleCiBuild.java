@@ -48,7 +48,7 @@ public class CircleCiBuild implements Build {
     }
 
     public String getRevision() {
-        return vcs_revision;
+        return vcs_revision.substring(0, 7);
     }
 
     public String getRevisionTitle() {

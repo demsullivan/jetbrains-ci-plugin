@@ -1,5 +1,6 @@
 package ui.ciToolWindow;
 
+import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
 import data.sources.*;
 import data.structures.*;
@@ -9,17 +10,22 @@ import com.intellij.openapi.wm.*;
 import com.intellij.ui.JBSplitter;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.content.*;
+import ui.ciToolWindow.table.CiBuildTable;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableColumnModel;
 
 public class CiToolWindowFactory implements ToolWindowFactory {
     private ToolWindow ciToolWindow;
     private JPanel ciToolWindowContent;
-    private JBTable listBuilds;
+    private CiBuildTable listBuilds;
     private JBList<String> listSteps;
     private JBSplitter splitter;
+
+    private JBScrollPane paneBuilds;
+    private JBScrollPane paneSteps;
 
     private Source dataSource;
 
@@ -47,17 +53,29 @@ public class CiToolWindowFactory implements ToolWindowFactory {
     private JComponent createSplitter() {
         splitter = new JBSplitter();
 
-        listBuilds = new JBTable();
-        listSteps = new JBList<String>();
+        listBuilds = new CiBuildTable();
+        paneBuilds = new JBScrollPane(listBuilds);
 
-        splitter.setFirstComponent(listBuilds);
-        splitter.setSecondComponent(listSteps);
+        listSteps = new JBList<String>();
+        paneSteps = new JBScrollPane(listSteps);
+
+        paneSteps.setVisible(false);
+
+        splitter.setFirstComponent(paneBuilds);
+        splitter.setSecondComponent(paneSteps);
+
+        splitter.setResizeEnabled(true);
 
         return splitter;
     }
 
     private void attachEventListeners() {
-
+        listBuilds.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                CiBuildTableModel model = (CiBuildTableModel)listBuilds.getModel();
+                CiToolWindowFactory.this.getSteps(model.getBuildAt(e.getFirstIndex()));
+            }
+        });
     }
 
     private void getBuilds() {
@@ -65,11 +83,12 @@ public class CiToolWindowFactory implements ToolWindowFactory {
 
         CiBuildTableModel model = new CiBuildTableModel(builds);
         listBuilds.setModel(model);
-
-        getSteps(builds[0]);
     }
 
     private void getSteps(Build build) {
+
+        paneSteps.setVisible(true);
+
         BuildStep[] steps = dataSource.getStepsForBuild(build);
 
         DefaultListModel<String> model = new DefaultListModel<String>();
