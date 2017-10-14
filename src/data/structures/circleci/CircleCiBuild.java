@@ -65,4 +65,8 @@ public class CircleCiBuild implements Build {
     public String getBuildResult() {
         return outcome;
     }
+
+    public String toString() {
+        return subject;
+    }
 }

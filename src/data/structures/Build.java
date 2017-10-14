@@ -10,4 +10,6 @@ public interface Build {
     public int getBuildTime();
     public String getBuildStatus();
     public String getBuildResult();
+
+    public String toString();
 }

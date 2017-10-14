@@ -10,11 +10,13 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.content.*;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class CiToolWindowFactory implements ToolWindowFactory {
     private ToolWindow ciToolWindow;
     private JPanel ciToolWindowContent;
-    private JBList<String> listBuilds;
+    private JBList<Build> listBuilds;
     private JBList<String> listSteps;
     private JBSplitter splitter;
 
@@ -29,17 +31,22 @@ public class CiToolWindowFactory implements ToolWindowFactory {
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(ciToolWindowContent, "", false);
 
-        ciToolWindowContent.add(createSplitter());
+        addSplitterToToolWindow();
+        attachEventListeners();
 
         toolWindow.getContentManager().addContent(content);
 
         getBuilds();
     }
 
+    private void addSplitterToToolWindow() {
+        ciToolWindowContent.add(createSplitter());
+    }
+
     private JComponent createSplitter() {
         splitter = new JBSplitter();
 
-        listBuilds = new JBList<String>();
+        listBuilds = new JBList<Build>();
         listSteps = new JBList<String>();
 
         splitter.setFirstComponent(listBuilds);
@@ -48,13 +55,21 @@ public class CiToolWindowFactory implements ToolWindowFactory {
         return splitter;
     }
 
+    private void attachEventListeners() {
+        listBuilds.addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                CiToolWindowFactory.this.getSteps(listBuilds.getModel().getElementAt(e.getFirstIndex()));
+            }
+        });
+    }
+
     private void getBuilds() {
         Build[] builds = dataSource.getBuilds();
 
-        DefaultListModel<String> model = new DefaultListModel<String>();
+        DefaultListModel<Build> model = new DefaultListModel<Build>();
 
         for (int i=0; i < builds.length; i++) {
-            model.addElement(builds[i].getRevisionTitle());
+            model.addElement(builds[i]);
         }
 
         listBuilds.setModel(model);
@@ -68,7 +83,7 @@ public class CiToolWindowFactory implements ToolWindowFactory {
         DefaultListModel<String> model = new DefaultListModel<String>();
 
         for (int i=0; i < steps.length; i++) {
-            model.addElement(steps[i].getStepName());
+            model.addElement(build.getRevision() + ": " + steps[i].getStepName());
         }
 
         listSteps.setModel(model);
