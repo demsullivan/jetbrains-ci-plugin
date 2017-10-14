@@ -1,5 +1,6 @@
 package ui.ciToolWindow;
 
+import com.intellij.ui.table.JBTable;
 import data.sources.*;
 import data.structures.*;
 
@@ -16,7 +17,7 @@ import javax.swing.event.ListSelectionListener;
 public class CiToolWindowFactory implements ToolWindowFactory {
     private ToolWindow ciToolWindow;
     private JPanel ciToolWindowContent;
-    private JBList<Build> listBuilds;
+    private JBTable listBuilds;
     private JBList<String> listSteps;
     private JBSplitter splitter;
 
@@ -46,7 +47,7 @@ public class CiToolWindowFactory implements ToolWindowFactory {
     private JComponent createSplitter() {
         splitter = new JBSplitter();
 
-        listBuilds = new JBList<Build>();
+        listBuilds = new JBTable();
         listSteps = new JBList<String>();
 
         splitter.setFirstComponent(listBuilds);
@@ -56,22 +57,13 @@ public class CiToolWindowFactory implements ToolWindowFactory {
     }
 
     private void attachEventListeners() {
-        listBuilds.addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent e) {
-                CiToolWindowFactory.this.getSteps(listBuilds.getModel().getElementAt(e.getFirstIndex()));
-            }
-        });
+
     }
 
     private void getBuilds() {
         Build[] builds = dataSource.getBuilds();
 
-        DefaultListModel<Build> model = new DefaultListModel<Build>();
-
-        for (int i=0; i < builds.length; i++) {
-            model.addElement(builds[i]);
-        }
-
+        CiBuildTableModel model = new CiBuildTableModel(builds);
         listBuilds.setModel(model);
 
         getSteps(builds[0]);

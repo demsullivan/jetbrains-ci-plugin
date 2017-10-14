@@ -5,11 +5,12 @@ public interface Build {
     public String getBuildUrl();
     public String getBuildNum();
     public String getBranch();
+    public String getCommitter();
     public String getRevision(); // TODO: build a Revision class?
     public String getRevisionTitle();
     public int getBuildTime();
     public String getBuildStatus();
-    public String getBuildResult();
+    public int getBuildResult();
 
     public String toString();
 }

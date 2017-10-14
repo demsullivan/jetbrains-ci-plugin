@@ -1,6 +1,7 @@
 package data.structures.circleci;
 
 import data.structures.Build;
+import data.structures.BuildResult;
 
 public class CircleCiBuild implements Build {
     public String vcs_url;
@@ -9,7 +10,7 @@ public class CircleCiBuild implements Build {
     public String branch;
     public String vcs_revision;
     public String committer_name;
-    public String comitter_email;
+    public String committer_email;
     public String subject;
     public String body;
     public String why;
@@ -54,6 +55,10 @@ public class CircleCiBuild implements Build {
         return subject;
     }
 
+    public String getCommitter() {
+        return committer_email;
+    }
+
     public int getBuildTime() {
         return build_time_millis;
     }
@@ -62,8 +67,15 @@ public class CircleCiBuild implements Build {
         return status;
     }
 
-    public String getBuildResult() {
-        return outcome;
+    public int getBuildResult() {
+        if (outcome.equals("success")) {
+            return BuildResult.Success;
+        } else if (outcome.equals("failed")) {
+            return BuildResult.Failed;
+        } else {
+            return BuildResult.Unknown;
+        }
+
     }
 
     public String toString() {
