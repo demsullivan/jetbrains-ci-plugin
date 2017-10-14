@@ -1,6 +1,7 @@
 package data.sources;
 
-import data.structures.*;
+import data.structures.Build;
+import data.structures.circleci.CircleCiBuild;
 import utils.*;
 import com.google.gson.*;
 
@@ -19,7 +20,7 @@ public class CircleCiSource implements Source {
     @Override
     public Build[] getBuilds() {
         String response = HttpRequest.get(rootUrl + "/project/github/enginuitygroup/platform", true, "circle-token", myApiKey).body();
-        return gson.fromJson(response, Build[].class);
+        return gson.fromJson(response, CircleCiBuild[].class);
     }
 
 //    @Override
