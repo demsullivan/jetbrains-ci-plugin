@@ -4,5 +4,5 @@ import data.structures.*;
 
 public interface Source {
     Build[] getBuilds();
-//    Step[] getStepsForBuild(Build build);
+    BuildStep[] getStepsForBuild(Build build);
 }

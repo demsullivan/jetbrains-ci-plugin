@@ -18,6 +18,12 @@ public class CiToolWindowFactory implements ToolWindowFactory {
     private JBList<String> listSteps;
     private JBSplitter splitter;
 
+    private Source dataSource;
+
+    public CiToolWindowFactory() {
+        dataSource = new CircleCiSource("e2386cc9784bffeb4aac72cc6cc75a48d77560ae");
+    }
+
     public void createToolWindowContent(Project project, ToolWindow toolWindow) {
         ciToolWindow = toolWindow;
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
@@ -43,15 +49,28 @@ public class CiToolWindowFactory implements ToolWindowFactory {
     }
 
     private void getBuilds() {
-        CircleCiSource source = new CircleCiSource("e2386cc9784bffeb4aac72cc6cc75a48d77560ae");
-        Build[] builds = source.getBuilds();
+        Build[] builds = dataSource.getBuilds();
 
         DefaultListModel<String> model = new DefaultListModel<String>();
 
         for (int i=0; i < builds.length; i++) {
-            model.addElement(builds[i].subject);
+            model.addElement(builds[i].getRevisionTitle());
         }
 
         listBuilds.setModel(model);
+
+        getSteps(builds[0]);
+    }
+
+    private void getSteps(Build build) {
+        BuildStep[] steps = dataSource.getStepsForBuild(build);
+
+        DefaultListModel<String> model = new DefaultListModel<String>();
+
+        for (int i=0; i < steps.length; i++) {
+            model.addElement(steps[i].getStepName());
+        }
+
+        listSteps.setModel(model);
     }
 }

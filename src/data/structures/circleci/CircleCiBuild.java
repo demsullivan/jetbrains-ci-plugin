@@ -39,7 +39,7 @@ public class CircleCiBuild implements Build {
     }
 
     public String getBuildNum() {
-        return build_num;
+        return Integer.toString(build_num);
     }
 
     public String getBranch() {
@@ -48,6 +48,10 @@ public class CircleCiBuild implements Build {
 
     public String getRevision() {
         return vcs_revision;
+    }
+
+    public String getRevisionTitle() {
+        return subject;
     }
 
     public int getBuildTime() {
