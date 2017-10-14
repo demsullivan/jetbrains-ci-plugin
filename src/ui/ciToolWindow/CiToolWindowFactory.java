@@ -43,7 +43,7 @@ public class CiToolWindowFactory implements ToolWindowFactory {
     }
 
     private void getBuilds() {
-        CircleCiSource source = new CircleCiSource();
+        CircleCiSource source = new CircleCiSource("e2386cc9784bffeb4aac72cc6cc75a48d77560ae");
         Build[] builds = source.getBuilds();
 
         DefaultListModel<String> model = new DefaultListModel<String>();

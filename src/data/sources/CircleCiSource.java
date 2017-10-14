@@ -11,14 +11,14 @@ public class CircleCiSource implements Source {
     private Gson gson;
     private String rootUrl = "https://circleci.com/api/v1.1";
 
-    public void CircleCiSource(String apiKey) {
+    public CircleCiSource(String apiKey) {
         myApiKey = apiKey;
         gson = new Gson();
     }
 
     @Override
     public Build[] getBuilds() {
-        String response = HttpRequest.get(rootUrl + "/project/github/enginuitygroup/platform").body();
+        String response = HttpRequest.get(rootUrl + "/project/github/enginuitygroup/platform", true, "circle-token", myApiKey).body();
         return gson.fromJson(response, Build[].class);
     }
 
