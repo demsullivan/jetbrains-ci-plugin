@@ -7,6 +7,7 @@ public interface Build {
     public String getBranch();
     public String getCommitter();
     public String getRevision(); // TODO: build a Revision class?
+    public String getRevisionUrl();
     public String getRevisionTitle();
     public int getBuildTime();
     public String getBuildStatus();

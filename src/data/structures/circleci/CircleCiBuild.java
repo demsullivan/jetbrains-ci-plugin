@@ -51,6 +51,22 @@ public class CircleCiBuild implements Build {
         return vcs_revision.substring(0, 7);
     }
 
+    public String getRevisionUrl() {
+        if (vcs_url.indexOf("github") > -1) {
+            return getGithubCommitUrl();
+        } else {
+            return getBitbucketCommitUrl();
+        }
+    }
+
+    public String getGithubCommitUrl() {
+        return vcs_url + "/commit/" + vcs_revision;
+    }
+
+    public String getBitbucketCommitUrl() {
+        return "";
+    }
+
     public String getRevisionTitle() {
         return subject;
     }
