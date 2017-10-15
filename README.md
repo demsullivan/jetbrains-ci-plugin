@@ -15,7 +15,6 @@ Other services to be added by request.
 * View all steps for a given build
 * Restart a build
 * Open a link to the commit or build page
-* 
 
 ### Future wishlist
 
