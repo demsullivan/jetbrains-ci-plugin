@@ -11,22 +11,24 @@ import com.intellij.openapi.project.Project;
         storages = @Storage("ci_settings.xml")
 )
 public class CiOptionsProvider implements PersistentStateComponent<CiOptionsProvider.State> {
-    private State myState;
+    public static class State {
+        public String service = "";
+        public String apiKey = "";
+        public String projectName = "";
+    }
+
+    private State myState = new State();
 
     public static CiOptionsProvider getInstance(Project project) {
         return ServiceManager.getService(project, CiOptionsProvider.class);
     }
 
-    @Override
     public State getState() {
         return myState;
     }
 
-    @Override
     public void loadState(State state) {
-        myState.service = state.service;
-        myState.apiKey = state.apiKey;
-        myState.projectName = state.projectName;
+        myState = state;
     }
 
     public String getService() {
@@ -37,12 +39,20 @@ public class CiOptionsProvider implements PersistentStateComponent<CiOptionsProv
         myState.service = service;
     }
 
+    public Boolean hasService() {
+        return myState.service != "";
+    }
+
     public String getApiKey() {
         return myState.apiKey;
     }
 
     public void setApiKey(String apiKey) {
         myState.apiKey = apiKey;
+    }
+
+    public Boolean hasApiKey() {
+        return myState.apiKey != "";
     }
 
     public String getProjectName() {
@@ -53,9 +63,9 @@ public class CiOptionsProvider implements PersistentStateComponent<CiOptionsProv
         myState.projectName = projectName;
     }
 
-    public class State {
-        String service = "";
-        String apiKey = "";
-        String projectName = "";
+    public Boolean hasProjectName() {
+        return myState.projectName != "";
     }
+
+
 }

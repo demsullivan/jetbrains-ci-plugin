@@ -28,6 +28,11 @@ public class CiSettingsPanel {
                 CiSettingsPanel.this.testConnection();
             }
         });
+
+        if (provider.hasApiKey() && provider.hasService()) {
+            populateProjectList(provider.getService(), provider.getApiKey());
+        }
+
         return myWholePanel;
     }
 
@@ -64,10 +69,22 @@ public class CiSettingsPanel {
     }
 
     private void testConnection() {
-        Source source = SourceFactory.getSource(getProviderName(), myTxApiKey.getText());
+        Source source = SourceFactory.getSource(getProviderName(), myTxApiKey.getText(), null);
+        if (source.testConnection()) {
+            myLbConnectionStatus.setText("Connection success!");
+        }
+
+        populateProjectList(source);
+    }
+
+    private void populateProjectList(String provider, String apiKey) {
+        Source source = SourceFactory.getSource(provider, apiKey, null);
+        populateProjectList(source);
+    }
+
+    private void populateProjectList(Source source) {
         String[] projects = source.getProjects();
 
-        myLbConnectionStatus.setText("Connection success!");
         DefaultListModel<String> model = new DefaultListModel<String>();
 
         for (int i=0; i < projects.length; i++) {
@@ -75,5 +92,9 @@ public class CiSettingsPanel {
         }
 
         myProjectsList.setModel(model);
+
+        if (myOptionsProvider.hasProjectName()) {
+            myProjectsList.setSelectedValue(myOptionsProvider.getProjectName(), false);
+        }
     }
 }

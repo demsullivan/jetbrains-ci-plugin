@@ -13,6 +13,7 @@ import ui.ciToolWindow.table.CiBuildStepTable;
 import ui.ciToolWindow.table.CiBuildStepTableModel;
 import ui.ciToolWindow.table.CiBuildTable;
 import ui.ciToolWindow.table.CiBuildTableModel;
+import ui.settings.CiOptionsProvider;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -32,9 +33,7 @@ public class CiToolWindowFactory implements ToolWindowFactory {
 
     private Source dataSource;
 
-    public CiToolWindowFactory() {
-        dataSource = new CircleCiSource("e2386cc9784bffeb4aac72cc6cc75a48d77560ae");
-    }
+    private CiOptionsProvider myOptionsProvider;
 
     public void createToolWindowContent(Project project, ToolWindow toolWindow) {
         ciToolWindow = toolWindow;
@@ -46,7 +45,12 @@ public class CiToolWindowFactory implements ToolWindowFactory {
 
         toolWindow.getContentManager().addContent(content);
 
-        getBuilds();
+        myOptionsProvider = CiOptionsProvider.getInstance(project);
+
+        if (myOptionsProvider.hasApiKey() && myOptionsProvider.hasProjectName()) {
+            dataSource = SourceFactory.getSource(myOptionsProvider);
+            getBuilds();
+        }
     }
 
     private void addSplitterToToolWindow() {
