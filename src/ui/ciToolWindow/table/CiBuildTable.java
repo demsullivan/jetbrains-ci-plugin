@@ -1,8 +1,11 @@
 package ui.ciToolWindow.table;
 
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
+import com.intellij.ide.BrowserUtil;
+import utils.Hyperlink;
+
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.*;
 
 public class CiBuildTable extends ResizableHeaderlessTable {
 
@@ -10,6 +13,22 @@ public class CiBuildTable extends ResizableHeaderlessTable {
         setTableHeader(new InvisibleResizableHeader());
         setShowHorizontalLines(false);
         setShowVerticalLines(false);
+
+        setDefaultRenderer(Hyperlink.class, new HyperlinkTableCellRenderer());
+
+        getColumnModel().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                int row = CiBuildTable.this.getSelectedRow();
+
+                if (row >= 0 && e.getFirstIndex() >= 0) {
+                    Object value = CiBuildTable.this.getValueAt(row, e.getFirstIndex());
+                    if (value.getClass().getName().equals("utils.Hyperlink")) {
+                        Hyperlink link = (Hyperlink) value;
+                        BrowserUtil.browse(link.getUrl());
+                    }
+                }
+            }
+        });
     }
 
     public void setModel(TableModel model) {

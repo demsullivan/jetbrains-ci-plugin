@@ -3,6 +3,7 @@ package ui.ciToolWindow.table;
 import com.intellij.icons.AllIcons;
 import data.structures.Build;
 import data.structures.BuildResult;
+import utils.Hyperlink;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -25,9 +26,9 @@ public class CiBuildTableModel extends DefaultTableModel {
         for (int i=0; i < builds.length; i++) {
             Object[] data = {
                     getBuildResultIcon(builds[i].getBuildResult()),
-                    builds[i].getBuildNum(),
+                    new Hyperlink(builds[i].getBuildNum(), builds[i].getBuildUrl()),
                     builds[i].getBranch(),
-                    builds[i].getRevision(),
+                    new Hyperlink(builds[i].getRevision(), builds[i].getRevisionUrl()),
                     builds[i].getRevisionTitle(),
                     builds[i].getCommitter()
             };
@@ -38,6 +39,9 @@ public class CiBuildTableModel extends DefaultTableModel {
     public Class<?> getColumnClass(int column) {
         switch(column) {
             case 0: return Icon.class;
+            case 1:
+            case 3:
+                return Hyperlink.class;
             default: return String.class;
         }
     }
