@@ -6,4 +6,5 @@ public interface Source {
     Build[] getBuilds();
     BuildStep[] getStepsForBuild(Build build);
     String[] getProjects();
+    Boolean testConnection();
 }

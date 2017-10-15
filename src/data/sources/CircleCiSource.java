@@ -12,16 +12,15 @@ import java.util.Iterator;
 import java.util.List;
 
 public class CircleCiSource implements Source {
-    public String myApiKey;
-
-
     private Gson gson;
     private String rootUrl = "https://circleci.com/api/v1.1";
-    private String projectPath;
 
-    public CircleCiSource(String apiKey) {
+    private String myApiKey;
+    private String myProjectPath;
+
+    public CircleCiSource(String apiKey, String projectPath) {
         myApiKey = apiKey;
-        projectPath = "github/enginuitygroup/platform";
+        myProjectPath = projectPath;
         gson = new Gson();
     }
 
@@ -43,7 +42,7 @@ public class CircleCiSource implements Source {
 
     @Override
     public String[] getProjects() {
-        String response = fetchData(rootUrl + "/projects");
+        String response = fetchData("/projects");
         JsonParser parser = new JsonParser();
         JsonArray projects = parser.parse(response).getAsJsonArray();
 
@@ -53,19 +52,37 @@ public class CircleCiSource implements Source {
 
         while (iterator.hasNext()) {
             JsonObject project = iterator.next().getAsJsonObject();
-            projectNames.add(project.get("username").getAsString() + "/" + project.get("reponame").getAsString());
+
+            String vcsUrl = project.get("vcs_url").getAsString();
+            String vcsType;
+
+            if (vcsUrl.indexOf("github") > -1) {
+                vcsType = "github";
+            } else {
+                vcsType = "bitbucket";
+            }
+
+            projectNames.add(vcsType + "/" + project.get("username").getAsString() + "/" + project.get("reponame").getAsString());
         }
 
         String[] projectNamesArr = new String[projectNames.size()];
         return projectNames.toArray(projectNamesArr);
     }
 
-    private String fetchData(String url) {
-        return HttpRequest.get(url, true, "circle-token", myApiKey).body();
+    @Override
+    public Boolean testConnection() {
+        return request("/me").code() == 200;
     }
 
+    private HttpRequest request(String url) {
+        return HttpRequest.get(rootUrl + url, true, "circle-token", myApiKey);
+    }
+
+    private String fetchData(String url) {
+        return request(url).body();
+    }
 
     private String getProjectUrl() {
-        return rootUrl + "/project/" + projectPath;
+        return "/project/" + myProjectPath;
     }
 }
