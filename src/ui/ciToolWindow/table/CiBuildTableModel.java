@@ -1,4 +1,4 @@
-package ui.ciToolWindow;
+package ui.ciToolWindow.table;
 
 import com.intellij.icons.AllIcons;
 import data.structures.Build;

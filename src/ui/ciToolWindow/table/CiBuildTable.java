@@ -1,8 +1,5 @@
 package ui.ciToolWindow.table;
 
-import ui.ciToolWindow.CiBuildTableModel;
-
-import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;

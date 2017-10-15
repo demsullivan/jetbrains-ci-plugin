@@ -24,6 +24,8 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <toolWindow id="Continuous Integration" anchor="bottom" factoryClass="ui.ciToolWindow.CiToolWindowFactory" />
+
+    <projectConfigurable groupId="build" displayName="Continuous Integration" id="ci" instance="ui.settings.CiOptionsConfigurable" />
     <!-- Add your extensions here -->
   </extensions>
 

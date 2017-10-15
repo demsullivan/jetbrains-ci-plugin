@@ -1,7 +1,6 @@
 package ui.ciToolWindow;
 
 import com.intellij.ui.components.JBScrollPane;
-import com.intellij.ui.table.JBTable;
 import data.sources.*;
 import data.structures.*;
 
@@ -10,22 +9,26 @@ import com.intellij.openapi.wm.*;
 import com.intellij.ui.JBSplitter;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.content.*;
+import ui.ciToolWindow.table.CiBuildStepTable;
+import ui.ciToolWindow.table.CiBuildStepTableModel;
 import ui.ciToolWindow.table.CiBuildTable;
+import ui.ciToolWindow.table.CiBuildTableModel;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableColumnModel;
 
 public class CiToolWindowFactory implements ToolWindowFactory {
     private ToolWindow ciToolWindow;
     private JPanel ciToolWindowContent;
-    private CiBuildTable listBuilds;
-    private JBList<String> listSteps;
-    private JBSplitter splitter;
 
+    private CiBuildTable listBuilds;
     private JBScrollPane paneBuilds;
+
+    private CiBuildStepTable listSteps;
     private JBScrollPane paneSteps;
+
+    private JBSplitter splitter;
 
     private Source dataSource;
 
@@ -56,7 +59,7 @@ public class CiToolWindowFactory implements ToolWindowFactory {
         listBuilds = new CiBuildTable();
         paneBuilds = new JBScrollPane(listBuilds);
 
-        listSteps = new JBList<String>();
+        listSteps = new CiBuildStepTable();
         paneSteps = new JBScrollPane(listSteps);
 
         paneSteps.setVisible(false);
@@ -91,12 +94,7 @@ public class CiToolWindowFactory implements ToolWindowFactory {
 
         BuildStep[] steps = dataSource.getStepsForBuild(build);
 
-        DefaultListModel<String> model = new DefaultListModel<String>();
-
-        for (int i=0; i < steps.length; i++) {
-            model.addElement(build.getRevision() + ": " + steps[i].getStepName());
-        }
-
+        CiBuildStepTableModel model = new CiBuildStepTableModel(steps);
         listSteps.setModel(model);
     }
 }
