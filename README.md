@@ -10,14 +10,18 @@ Other services to be added by request.
 
 ### TODO for v1
 
-* Reasonably easy user setup via Settings
-* View all project builds
-* View all steps for a given build
+* ~~Reasonably easy user setup via Settings~~
+* ~~View all project builds~~
+* ~~View all steps for a given build~~
+* ~~Open a link to the commit or build page~~
 * Restart a build
-* Open a link to the commit or build page
+* Refresh button
+* Move API requests into background tasks
+* Refresh tool window when settings are changed
 
 ### Future wishlist
 
+* Inspect build step output
 * Support for Heroku CI
 * Support for Travis CI
 * Tight IDE integration
