@@ -27,13 +27,12 @@ public class HyperlinkTableCellRenderer extends JLabel implements TableCellRende
 
             Map<TextAttribute, Integer> fontAttributes = new HashMap<TextAttribute, Integer>();
             fontAttributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-            fontAttributes.put(TextAttribute.BACKGROUND, null);
 
             setText(link.getLabel());
 
             if (!isSelected) {
                 setForeground(table.getSelectionBackground());
-                setBackground(table.getSelectionForeground());
+                setBackground(table.getBackground());
             } else {
                 setBackground(table.getSelectionBackground());
                 setForeground(table.getSelectionForeground());

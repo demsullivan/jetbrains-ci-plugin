@@ -17,7 +17,7 @@ Other services to be added by request.
 * Restart a build
 * Refresh button
 * Move API requests into background tasks
-* Refresh tool window when settings are changed
+* ~~Refresh tool window when settings are changed~~
 
 ### Future wishlist
 
@@ -25,6 +25,7 @@ Other services to be added by request.
 * Support for Heroku CI
 * Support for Travis CI
 * Tight IDE integration
+    * SSH in to a build from IDE
     * Hyperlinks to lines of code
     * Build failure inspection tools
     

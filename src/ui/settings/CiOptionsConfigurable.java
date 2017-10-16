@@ -5,6 +5,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.util.messages.MessageBus;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.jetbrains.annotations.Nls;
 
@@ -46,7 +47,16 @@ public class CiOptionsConfigurable implements SearchableConfigurable, Disposable
 
     @Override
     public void apply() throws ConfigurationException {
-        myPanel.apply();
+        MessageBus bus = myProject.getMessageBus();
+
+        CiSettingsChangeNotifier publisher = bus.syncPublisher(CiSettingsChangeNotifier.CI_SETTINGS_CHANGE_TOPIC);
+        publisher.beforeAction(myOptionsProvider);
+
+        try {
+            myPanel.apply();
+        } finally {
+            publisher.afterAction(myOptionsProvider);
+        }
     }
 
     @Override
